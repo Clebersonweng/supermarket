@@ -2,7 +2,7 @@
 // agregar aqui um id e com base no domain agregar a clase ativa?>
 
 <nav>
-   <ul class="nav">
+   <ul class="nav" id="nav-main">
       <li class="nav-item ">
          <a class="nav-link" id="home" <?php if ($pagename == 'home.php') { echo ' class="current"';} ?> href="
             home.php">home</a>

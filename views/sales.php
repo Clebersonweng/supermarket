@@ -16,7 +16,7 @@
                <thead>
                   <tr>
                      <th scope="col">#</th>
-                     <th scope="col">Produtos</th>
+                     <th scope="col">Cliente</th>
                      <th scope="col">Total Impostos</th>
                      <th scope="col">Total Geral</th>
                   </tr>
@@ -35,9 +35,9 @@
                      foreach ($result as $row) : ?>
                   <tr>
                      <th scope="row"><?php echo $row['n_id']; ?></th>
-                     <td><?php echo $row['c_descr']; ?></td>
-                     <td><?php echo $row['n_id_type_products']; ?></td>
-                     <td><?php echo round($row['n_price'], 2); ?></td>
+                     <td><?php echo $row['c_client']; ?></td>
+                     <td><?php echo round($row['n_total_taxes'], 2); ?></td>
+                     <td><?php echo round($row['n_grand_total'], 2); ?></td>
                   </tr>
                   <?php endforeach;
                   } ?>
@@ -46,11 +46,11 @@
          </div>
          <div id="new" class="tab-pane fade">
 
-            <form id="loginform" class="m-1" method="post"
-               action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+            <form class="m-1" id="formSales" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
+               method="post" enctype="multipart/form-data">
                <div class="form-row">
                   <div class="form-group col-md-4">
-                     <label for="inputEmail4">Produto</label>
+                     <label for="n_id_product_sale">Produto</label>
                      <select class="form-control" id="n_id_product_sale" required>
                         <option value=""> </option>
                         <?php
@@ -63,23 +63,24 @@
                         <?php endforeach; ?>
                      </select>
                   </div>
-                  <div class="form-group col-md-3">
+                  <div class="form-group col-md-1">
                      <label for="n_price">Preço</label>
-                     <input type="number" class="form-control" id="n_price" step="0.01" placeholder="0" min="1" required
-                        readonly>
+                     <input type="number" class="form-control text-right" id="n_price" step="0.01" placeholder="0"
+                        min="1" required readonly>
                   </div>
-                  <div class="form-group col-md-3">
+                  <div class="form-group col-md-1">
                      <label for="n_quantity">Quantidade</label>
-                     <input type="number" class="form-control" id="n_quantity" placeholder="quantidade" required>
+                     <input type="number" class="form-control text-right" id="n_quantity" min="0" max="100000"
+                        placeholder="quantidade" required>
                   </div>
                   <div class="form-group col-md-1 d-flex justify-content-bottom mt-4 pt-2">
                      <label for="inputPassword4">&nbsp;</label>
                      <button class="btn btn-primary" type="button" id="btn_add_item">ADD</button>
                   </div>
                </div>
-
             </form>
-            <table class="table table-striped p-0">
+
+            <table class="table table-striped p-0" id="tableItems">
                <thead>
                   <tr>
                      <th scope="col">#</th>
@@ -102,9 +103,21 @@
                   </tr>
                </tfoot>
             </table>
-            <div class="form-row m-2"> <button class="btn btn-danger mr-2" id="btn_cancelar">Cancelar</button>
-               <button class="btn btn-primary" type="submit" id="btnSave">Guardar</button>
-            </div>
+            <form id="formTableData" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
+               enctype="multipart/form-data">
+               <div class="form-row m-2"> <button class="btn btn-danger mr-2" id="btnCancelSale">Cancelar</button>
+                  <button class="btn btn-primary" type="submit" id="btnSave">Guardar</button>
+               </div>
+            </form>
+
+            <?php
+            if (isset($_POST["c_table_data"])) {
+               $data = filter_var($_POST["c_table_data"]);
+
+               $sales = new Sales();
+               $result = $sales->addSales($data);
+            }
+            ?>
          </div>
       </div>
    </div>

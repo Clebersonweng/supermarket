@@ -30,7 +30,7 @@ $(document).ready(function () {
 
             setTimeout(() => {
                $(".alert").alert('close');
-               // location.reload();
+               location.reload();
             }, 3000);
          }).fail(function (response) {
             $("#alert").addClass('alert-danger').removeClass('d-none').append('<b>500</b> Ocorreu um erro no servidor.');

@@ -3,7 +3,7 @@ $(document).ready(function () {
    if ( window.location.pathname == '/views/type-products.php' ){
       /*you are on homepage*/
       $('.nav-order a:first-child').addClass('current');
-  }
+   }
 
    console.log("ready type products!");
    setTimeout(() => {

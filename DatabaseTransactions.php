@@ -13,7 +13,7 @@ class DatabaseTransactions extends PDOStatement
    {
       $connection = new PDOConfig();
       if ($connection === false) {
-         echo "ERROR: Could not connect. " . mysqli_connect_error();
+         echo "ERROR: Could not connect. " . error_get_last();
       }
       return $connection;
    }
@@ -75,6 +75,51 @@ class DatabaseTransactions extends PDOStatement
       }
    }
 
+   public function insertSales($client = 'ocasional', $total_taxes, $grand_total)
+   {
+      $sql = "INSERT INTO sales(c_client,n_total_taxes,n_grand_total) VALUES (?,?,?)
+         RETURNING n_id
+      ";
+      try {
+         $connection = $this->connection();
+         $statement = $connection->prepare($sql);
+
+         $statement->bindParam(1, $client, PDO::PARAM_STR);
+         $statement->bindParam(2, $total_taxes, PDO::PARAM_STR);
+         $statement->bindParam(3, $grand_total, PDO::PARAM_STR);
+
+         $statement->execute();
+         $result = $statement->fetch(PDO::FETCH_ASSOC);
+         $connection = null;
+         return $result;
+      } catch (PDOException $e) {
+         echo $e->getMessage();
+         return false;
+      }
+   }
+
+   public function insertSalesDetail($n_id_sales, $n_id_products,$n_quantity,$n_taxes_by_item,$n_subtotal)
+   {
+      $sql = "INSERT INTO sales_detail(n_id_sales,n_id_products,n_quantity,n_taxes_by_item,n_subtotal) VALUES (?,?,?,?,?)";
+      try {
+         $connection = $this->connection();
+         $statement = $connection->prepare($sql);
+
+         $statement->bindParam(1, $n_id_sales, PDO::PARAM_STR);
+         $statement->bindParam(2, $n_id_products, PDO::PARAM_STR);
+         $statement->bindParam(3, $n_quantity, PDO::PARAM_STR);
+         $statement->bindParam(4, $n_taxes_by_item, PDO::PARAM_STR);
+         $statement->bindParam(5, $n_subtotal, PDO::PARAM_STR);
+
+         $statement->execute();
+         $connection = null;
+         return true;
+      } catch (PDOException $e) {
+         echo $e->getMessage();
+         return false;
+      }
+   }
+
    public function select($table, $id = null)
    {
       if (isset($id)) {
@@ -106,15 +151,14 @@ class DatabaseTransactions extends PDOStatement
       }
    }
 
-   public function update($event_name, $description, $id)
+   public function update($c_descr, $id)
    {
-      $sql = "UPDATE events set event_name = ?, description = ? WHERE id = ?";
+      $sql = "UPDATE products set c_descr = ? WHERE id = ?";
       try {
          $connection = $this->connection();
          $statement = $connection->prepare($sql);
-         $statement->bindParam(1, $event_name, PDO::PARAM_STR);
-         $statement->bindParam(2, $description, PDO::PARAM_STR);
-         $statement->bindParam(3, $id, PDO::PARAM_INT);
+         $statement->bindParam(1, $c_descr, PDO::PARAM_STR);
+         $statement->bindParam(2, $id, PDO::PARAM_INT);
          $statement->execute();
          $connection = null;
          return true;
@@ -126,7 +170,7 @@ class DatabaseTransactions extends PDOStatement
 
    public function delete($id)
    {
-      $sql = "DELETE FROM events WHERE id = ?";
+      $sql = "DELETE FROM products WHERE id = ?";
       try {
          $connection = $this->connection();
          $statement = $connection->prepare($sql);
