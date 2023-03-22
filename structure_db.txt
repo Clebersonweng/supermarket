@@ -1,0 +1,42 @@
+ CREATE TABLE type_products (
+   n_id serial PRIMARY KEY,
+   c_descr varchar not null,
+   ts_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ CREATE TABLE type_taxs (
+   n_id serial PRIMARY KEY,
+   n_id_type_products int not null ,
+   n_percent numeric(2,2) not null,
+   ts_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	 FOREIGN KEY (n_id_type_products) REFERENCES type_products(n_id)
+);
+
+ CREATE TABLE products (
+   n_id serial PRIMARY KEY,
+   c_descr varchar not null ,
+   n_price numeric(15,8) not null,
+   n_id_type_products int not null ,
+   ts_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	 FOREIGN KEY (n_id_type_products) REFERENCES type_products(n_id)
+);
+
+CREATE TABLE sales (
+   n_id serial PRIMARY KEY,
+   n_total_taxes numeric(15,8) not null,
+   n_grand_total numeric(15,8) not null,
+   ts_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sales_detail (
+   n_id serial PRIMARY KEY,
+   n_id_sales int not null,
+   n_id_products int not null ,
+   n_taxes_by_item numeric(15,8) not null,
+   n_subtotal numeric(15,8) not null,
+   ts_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (n_id_sales) REFERENCES sales(n_id),
+	FOREIGN KEY (n_id_products) REFERENCES products(n_id)
+);
+
+select * from events;

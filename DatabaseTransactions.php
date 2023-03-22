@@ -18,15 +18,14 @@ class DatabaseTransactions extends PDOStatement
       return $connection;
    }
 
-   public function insert($event_name, $description)
+   public function insertTypeProducts($c_descr)
    {
-      $sql = "INSERT INTO events(event_name, description) VALUES (?, ?)";
+      $sql = "INSERT INTO type_products(c_descr) VALUES (?)";
       try {
          $connection = $this->connection();
          $statement = $connection->prepare($sql);
 
-         $statement->bindParam(1, $event_name, PDO::PARAM_STR);
-         $statement->bindParam(2, $description, PDO::PARAM_STR);
+         $statement->bindParam(1, $c_descr, PDO::PARAM_STR);
 
          $statement->execute();
          $connection = null;
@@ -37,10 +36,49 @@ class DatabaseTransactions extends PDOStatement
       }
    }
 
-   public function select($id = null)
+   public function insertTypeTaxes($n_type, $n_percent)
+   {
+      $sql = "INSERT INTO type_taxes(n_id_type_products,n_percent) VALUES (?,?)";
+      try {
+         $connection = $this->connection();
+         $statement = $connection->prepare($sql);
+
+         $statement->bindParam(1, $n_type, PDO::PARAM_STR);
+         $statement->bindParam(2, $n_percent, PDO::PARAM_STR);
+
+         $statement->execute();
+         $connection = null;
+         return true;
+      } catch (PDOException $e) {
+         echo $e->getMessage();
+         return false;
+      }
+   }
+
+   public function insert_products($c_descr, $n_id_type_products, $n_price)
+   {
+      $sql = "INSERT INTO products(c_descr,n_id_type_products,n_price) VALUES (?,?,?)";
+      try {
+         $connection = $this->connection();
+         $statement = $connection->prepare($sql);
+
+         $statement->bindParam(1, $c_descr, PDO::PARAM_STR);
+         $statement->bindParam(2, $n_id_type_products, PDO::PARAM_STR);
+         $statement->bindParam(3, $n_price, PDO::PARAM_STR);
+
+         $statement->execute();
+         $connection = null;
+         return true;
+      } catch (PDOException $e) {
+         echo $e->getMessage();
+         return false;
+      }
+   }
+
+   public function select($table, $id = null)
    {
       if (isset($id)) {
-         $sql = "SELECT * FROM events WHERE id = :id";
+         $sql = "SELECT * FROM $table WHERE id = :id";
          try {
             $connection = $this->connection();
             $statement = $connection->prepare($sql);
@@ -54,7 +92,7 @@ class DatabaseTransactions extends PDOStatement
             return false;
          }
       } else {
-         $sql =  "SELECT * FROM events";
+         $sql =  "SELECT * FROM $table";
          try {
             $connection = $this->connection();
             $statement = $connection->query($sql);
@@ -96,6 +134,20 @@ class DatabaseTransactions extends PDOStatement
          $statement->execute();
          $connection = null;
          return true;
+      } catch (PDOException $e) {
+         echo $e->getMessage();
+         return false;
+      }
+   }
+
+   public function query($sql)
+   {
+      try {
+         $connection = $this->connection();
+         $statement = $connection->query($sql);
+         $result = $statement->fetchAll();
+         $connection = null;
+         return $result;
       } catch (PDOException $e) {
          echo $e->getMessage();
          return false;

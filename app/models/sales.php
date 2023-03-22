@@ -2,23 +2,25 @@
 
 require '../DatabaseTransactions.php';
 
-class Event
+class Sales
 {
-   public $event_name;
-   public $description;
+   public $total;
+   public $totalTaxes;
+   public $n_price;
+   public $n_id_product;
+   public $n_id;
    private $db;
-
    public function __construct()
    {
    }
 
-   public function addEvent($event_name, $description)
+   public function addSales($n_type_product, $n_percent)
    {
-      $event_name = filter_var($event_name, FILTER_SANITIZE_STRING);
-      $description = filter_var($description, FILTER_SANITIZE_STRING);
+      $n_type_product = filter_var($n_type_product, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $n_percent = filter_var($n_percent, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
       $db = new DatabaseTransactions();
-      $inserted = $db->insert($event_name, $description);
+      $inserted = $db->insertSales($n_type_product);
       if ($inserted) {
          return "Successfully inserted";
       } else {
@@ -26,10 +28,10 @@ class Event
       }
    }
 
-   public function viewEvents()
+   public function viewSales()
    {
       $db = new DatabaseTransactions();
-      $result = $db->select();
+      $result = $db->select("sales");
       if ($result) {
          return $result;
       } else {
@@ -37,7 +39,7 @@ class Event
       }
    }
 
-   public function viewEvent($id)
+   public function viewSale($id)
    {
       $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
 
@@ -50,10 +52,10 @@ class Event
       }
    }
 
-   public function editEvent($id, $event_name, $description)
+   public function editSale($id, $event_name, $description)
    {
-      $event_name = filter_var($event_name, FILTER_SANITIZE_STRING);
-      $description = filter_var($description, FILTER_SANITIZE_STRING);
+      $event_name = filter_var($event_name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $description = filter_var($description, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
 
       $db = new DatabaseTransactions();
@@ -65,7 +67,7 @@ class Event
       }
    }
 
-   public function deleteEvent($id)
+   public function deleteSale($id)
    {
       $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
       $db = new DatabaseTransactions();
