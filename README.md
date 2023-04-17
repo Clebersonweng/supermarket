@@ -7,3 +7,4 @@ Pasos para utilizar:
 2 - accesar a pasta do projeto
 3 - fazer restore do arquivo do banco de dados chamado supermarket_db em um banco de dados postgresql
 4 - no terminal rodar o comando php -S localhost:8080
+5 - acessar no navegador http://localhost:8080/views/home.php
