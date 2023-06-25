@@ -2,12 +2,14 @@
 
 namespace Supermarket\Controllers;
 
-use Supermarket\App\App;
 use Exception;
 use Supermarket\models\TypeProducts;
 use Supermarket\controllers\BaseController;
 class TypeProductController extends BaseController {
-   
+
+   public function __construct() {
+      parent::__construct();
+   }
    public static function index() {
       $model = new TypeProducts();
 
@@ -26,7 +28,8 @@ class TypeProductController extends BaseController {
    public static function save() {
 
       //o nome do input na view deve estar igual ao do model para ele poder setar o valor via post e poder fazer o load no model
-      $document = TypeProductController::getPost('descr');
+      $base = new BaseController();
+      $base->getPost('descr');
 
       $model = new TypeProducts();
       $model->load($_POST);   

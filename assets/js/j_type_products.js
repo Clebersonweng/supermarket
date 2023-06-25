@@ -23,19 +23,21 @@ $(document).ready(function () {
       })
          .always(function () {
             $("#btn_guardar").prop("disabled", false);
-         }).done(function (response, status) {
-            if (status == 'success') {
+         }).done(function (response) {
+            if ( response.status ) {
                $("#alert").addClass('alert-success').removeClass('d-none').append('Tipo de produto armazenado corretamente');
                $('form')[0].reset();
+               setTimeout(() => {
+                  $(".alert").alert('close');
+                  location.reload();
+               }, 3000);
             }
             else {
                $("#alert").addClass('alert-danger').removeClass('d-none').append('Não foi possivel armazenar o tipo de produto.');
+               
             }
 
-            setTimeout(() => {
-               $(".alert").alert('close');
-               location.reload();
-            }, 3000);
+            
          }).fail(function (response) {
             $("#alert").addClass('alert-danger').removeClass('d-none').append('<b>500</b> Ocorreu um erro no servidor.');
             setTimeout(() => {
