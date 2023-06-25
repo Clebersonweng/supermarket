@@ -34,7 +34,6 @@ $(document).ready(function () {
             }
             else {
                $("#alert").addClass('alert-danger').removeClass('d-none').append('Não foi possivel armazenar o tipo de produto.');
-               
             }
 
             

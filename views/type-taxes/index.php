@@ -29,15 +29,19 @@
                enctype="multipart/form-data">
                <div class="col-md-12 m-2 text-center">
                   <div class="form-group row">
-                     <label class=" col-sm-1 col-form-label" for="exampleFormControlInput1">Tipo</label>
+                     <label class=" col-sm-1 col-form-label" for="n_id_type_product">Tipo</label>
                      <div class="col-md-3">
-                        <select class="form-control" id="n_id_type_product" name="n_id_type_product" required>
-                          
+                        <select class="select form-control" id="n_id_type_products" name="n_id_type_products" required>
+                           <option value=""></option>
+                           <?php foreach ($typeProducts as $type) :?>
+                                 <option value="<?= $type['n_id'] ?>"><?= $type['descr'] ?></option>
+                              </tr>
+                           <?php endforeach; ?> 
                         </select>
                      </div>
                   </div>
                   <div class="form-group row">
-                     <label class="col-sm-1 col-form-label" for="exampleFormControlInput1">Porcentagem</label>
+                     <label class="col-sm-1 col-form-label" for="n_percent">Porcentagem</label>
                      <div class="col-md-2">
                         <input type="number" class="form-control" step="0.01" id="n_percent" name="n_percent"
                            placeholder="5" max="100" min="0" required>

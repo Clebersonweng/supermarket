@@ -13,7 +13,7 @@ $(document).ready(function () {
       $("#btnSaveTaxes").prop("disabled", true);
       e.preventDefault();
       $.ajax({
-         url: 'type-taxes.php',
+         url: 'http://localhost:8080/type-taxes',
          type: 'POST',
          data: new FormData(this),
          processData: false,
@@ -21,19 +21,18 @@ $(document).ready(function () {
       })
          .always(function () {
             $("#btnSaveTaxes").prop("disabled", false);
-         }).done(function (response, status) {
-            if (status == 'success') {
-               $("#alert").addClass('alert-success').removeClass('d-none').append('Tipo de imposto armazenado corretamente');
+         }).done(function (response) {
+            if ( response.status ) {
+               $("#alert").addClass('alert-success').removeClass('d-none').append('Tipo de produto armazenado corretamente');
                $('form')[0].reset();
+               setTimeout(() => {
+                  $(".alert").alert('close');
+                  location.reload();
+               }, 3000);
             }
             else {
-               $("#alert").addClass('alert-danger').removeClass('d-none').append('Não foi possivel armazenar o tipo de imposto.');
+               $("#alert").addClass('alert-danger').removeClass('d-none').append('Não foi possivel armazenar o tipo de produto.');
             }
-
-            setTimeout(() => {
-               $(".alert").alert('close');
-               location.reload();
-            }, 3000);
          }).fail(function (response) {
             $("#alert").addClass('alert-danger').removeClass('d-none').append('<b>500</b> Ocorreu um erro no servidor.');
          });

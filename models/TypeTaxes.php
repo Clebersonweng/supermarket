@@ -3,30 +3,28 @@
 namespace Supermarket\models;
 
 use Supermarket\models\BaseModel;
-
+use Exception;
 class TypeTaxes extends BaseModel
 {
-   public $nId;
-   public $nIdTypeProducts;
-   public $nPercent;
+   public $n_id;
+   public $n_id_type_products;
+   public $n_percent;
 
-   public function __construct()
-   {
+   public function __construct() {
+
    }
 
-   public static function tableName(): string
-   {
+   public static function tableName(): string {
       return 'type_taxes';
    }
 
-   public function validate(): bool
-   {
-      if (!strlen($this->nIdTypeProducts)) {
-         $this->setErrors('Descrição', '"Descrição" é um campo obrigatório.');
+   public function validate(): bool {
+      if (!strlen($this->n_id_type_products)) {
+         $this->setErrors('Tipo de produto', 'Id do tipo de produto é um campo obrigatório.');
       }
 
-      if (!strlen($this->nPercent)) {
-         $this->setErrors('Descrição', '"Descrição" é um campo obrigatório.');
+      if (!strlen($this->n_percent)) {
+         $this->setErrors('Porcentagem', '"Porcentagem" é um campo obrigatório.');
       }
       return empty($this->getErrors());
    }
@@ -34,39 +32,34 @@ class TypeTaxes extends BaseModel
    /**
     * @return int|null
     */
-    public function getn_id() {
+    public function get_n_id() {
       return $this->n_id;
    }
    
-   public function setn_id($id) {
+   public function set_n_id($id) {
       $this->n_id = $id;
    }
 
    /**
     * @return int|null
     */
-   public function getnIdTypeProducts()
-   {
-      return $this->nIdTypeProducts;
+   public function get_n_id_type_products() {
+      return $this->n_id_type_products;
    }
 
-   public function setnIdTypeProducts($type)
-   {
-      $this->nIdTypeProducts = $type;
+   public function set_n_id_type_products($type) {
+      $this->n_id_type_products = $type;
    }
 
-   public function getNPercent()
-   {
-      return $this->nIdTypeProducts;
+   public function get_n_percent() {
+      return $this->n_percent;
    }
 
-   public function setNPercent($percent)
-   {
-      $this->nPercent = $percent;
+   public function set_n_percent($percent) {
+      $this->n_percent = $percent;
    }
 
-   public static function getAll()
-   {
+   public static function getAll() {
       $sql = 'SELECT 
                   type_taxes.n_id,
                   type_products.n_id AS n_type_product_id,
@@ -82,5 +75,23 @@ class TypeTaxes extends BaseModel
          return ['data' => [], 'status' => false];
       }
       return ['data' => $result, 'status' => true];
+   }
+   
+   public static function getTypeProducts() {
+      try {
+         $sql = '
+            SELECT 
+               *
+            FROM 
+               type_products
+            ';
+         
+         $result = self::query($sql);
+
+         return $result;
+
+      } catch (\Throwable $th) {
+         throw new Exception("Error Processing type tax get type products", 1);
+      }    
    }
 }
