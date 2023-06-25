@@ -1,0 +1,16 @@
+{
+   "name": "cleberson/supermarket",
+   "autoload": {
+      "psr-4": {
+         "Supermarket\\": "./"
+     }
+   },
+   "authors": [
+      {
+         "name": "Cleberson"
+      }
+   ],
+   "require": {
+      "vlucas/phpdotenv": "^5.5"
+   }
+}

@@ -2,3 +2,29 @@
    background: #4FA9DC;
    color: #000;
 }
+
+.wrapper {
+   min-height: calc(100vh - 70px);
+}
+
+.menu {
+   display:flex;
+   height: 3rem;
+   color: #2f7ba7;
+   background-color: #e2e2e7;
+   padding: 0.5rem;
+   margin-bottom: 1rem;
+}
+
+.footer {
+   display:flex;
+   height: 3rem;
+   color: #2f7ba7;
+   background-color: #e2e2e7;
+   padding: 0.5rem;
+}
+
+table {
+   height : 100vh;
+   overflow-y : auto;
+}

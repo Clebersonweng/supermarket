@@ -1,17 +1,8 @@
 $(document).ready(function () {
 
-   if ( window.location.pathname == '/views/type-products.php' ){
-      /*you are on homepage*/
-      $('.nav-order a:first-child').addClass('current');
-   }
 
    console.log("ready type products!");
-   setTimeout(() => {
-      $("ul.nav > li").click(function (e) {
-         $("ul.nav > li").removeClass("active");
-         $(this).addClass("active");
-      });
-   }, 10000);
+
    $("#c_descr").focus();
    $("#btn_cancelar").on("click", function (event) {
       event.preventDefault();
@@ -24,7 +15,7 @@ $(document).ready(function () {
       $("#btn_guardar").prop("disabled", true);
 
       $.ajax({
-         url: 'type-products.php',
+         url: 'http://localhost:8080/type-products',
          type: 'POST',
          data: new FormData(this),
          processData: false,
@@ -47,6 +38,9 @@ $(document).ready(function () {
             }, 3000);
          }).fail(function (response) {
             $("#alert").addClass('alert-danger').removeClass('d-none').append('<b>500</b> Ocorreu um erro no servidor.');
+            setTimeout(() => {
+               $(".alert").alert('close');
+            }, 3000);
          });
 
    });

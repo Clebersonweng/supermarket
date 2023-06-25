@@ -1,6 +1,7 @@
 let dataItems = [];
 $(document).ready(function () {
 
+
    $("#btn_add_item").on("click", function (event) {
       event.preventDefault();
       if (is_valid_form()) {

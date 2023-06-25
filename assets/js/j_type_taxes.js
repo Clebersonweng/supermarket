@@ -1,5 +1,7 @@
 $(document).ready(function () {
    console.log("ready type taxes!");
+
+
    $("#c_descr").focus();
    $("#btnCancel").on("click", function (event) {
       event.preventDefault();
