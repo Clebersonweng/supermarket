@@ -30,7 +30,7 @@ class TypeTaxController {
       $base->getPost('n_percent');
 
       $model = new TypeTaxes();
-      $model->load($_POST);   
+      $model->load($_POST);
 
       $new = $model->isNewRecord();
       $response = ['status'=>false,'msg'=>'fail'];

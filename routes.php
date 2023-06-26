@@ -7,4 +7,5 @@ $router->post('type-products', 'TypeProductController@save');
 $router->get('type-taxes', 'TypeTaxController@index');
 $router->post('type-taxes', 'TypeTaxController@save');
 $router->get('products', 'ProductController@index');
+$router->post('products', 'ProductController@save');
 $router->get('sales', 'SaleController@index');
