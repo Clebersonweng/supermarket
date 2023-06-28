@@ -63,7 +63,7 @@ abstract class BaseModel {
             return false;
         }
         $isNew = ($this->isNewRecord()) ? true : false;
-        // todo takes the variable create and pass null if is update , solution when is update remote the param create_at
+
         if ( $isNew ) {
             $this->created_at = date('Y/m/d H:i:s');
         }
@@ -92,40 +92,31 @@ abstract class BaseModel {
                 array_combine($params, $variables)
             );
             $this->n_id = $db->getDb()->lastInsertId();
-        } else {
-            // todo codigos repetindo ajustar posteriormente
-            // $variables = array_filter($variables, static function ($element) {
-            //     return $element !== "n_id";
-            // },ARRAY_FILTER_USE_KEY);
-
-            $columns = implode(', ', array_keys($variables));
-
-            $params = array_map(static function ($param) {
-                return ':' . $param;
-            }, array_keys($variables));
-            $this->update($db, $variables, $columns);
         }
 
         return true;
     }
 
-    public function delete() {
-        $table = self::getEngine() === 'pgsql' ? '%s' : '`%s` ';
+    public function update() {
         $db = Database::getInstance();
-        try {
-            $result = $db->query(
-                sprintf("DELETE FROM {$table} WHERE n_id = :n_id", static::tableName()),
-                [
-                    ':n_id' => $this->n_id
-                ]
-            );
-            return true;
-        } catch (\Throwable $th) {
+
+        if (!$this->validate()) {
+            //Controller::setFlash('danger', $this->getErrors());
             return false;
         }
-    }
 
-    public function update($db, $variables, $columns) {
+        $this->updated_at = date('Y/m/d H:i:s');
+
+        $db = Database::getInstance();
+
+        $variables = $this->getAttributes();
+
+        $columns = implode(', ', array_keys($variables));
+
+        $params = array_map(static function ($param) {
+            return ':' . $param;
+        }, array_keys($variables));
+
         $table = self::getEngine() === 'pgsql' ? '%s' : '`%s` ';
 
         $columns = array_map(static function ($column) {
@@ -148,6 +139,22 @@ abstract class BaseModel {
             $params
         );
         return $result;
+    }
+
+    public function delete() {
+        $table = self::getEngine() === 'pgsql' ? '%s' : '`%s` ';
+        $db = Database::getInstance();
+        try {
+            $result = $db->query(
+                sprintf("DELETE FROM {$table} WHERE n_id = :n_id", static::tableName()),
+                [
+                    ':n_id' => $this->n_id
+                ]
+            );
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
     }
 
     public static function  get($conditions = [], $all = false) {

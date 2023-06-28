@@ -62,8 +62,8 @@ class TypeProductController extends BaseController {
 
       $response = ['status'=>false,'msg'=>'fail'];
 
-      if ($model->save()) {
-         $response =  ['status'=>true,'msg'=>'Dados armazenados com sucesso.'];
+      if ( $model->update() ) {
+         $response =  ['status'=>true,'msg'=>'Dados atualizados com sucesso.'];
       } else {
          throw new Exception("Error Processing save data", 1);
          $response =  ['status'=>false,'msg'=>'Error ao atualizar os dados do tipo de produto.'];

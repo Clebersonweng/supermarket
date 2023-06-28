@@ -17,11 +17,13 @@ function submitForm(formId, btnSaveId, url, method) {
       .always(function () {
          $("#" + btnSaveId).prop("disabled", false);
       }).done(function (response) {
+         let msg = response.msg || 'Nāo foi possivel retornar a mensagem.'
          if (response.status) {
-            showMessage({ type: 'success', msg: 'Tipo de produto armazenado corretamente', reload: true });
+
+            showMessage({ type: 'success', msg: msg, reload: true });
          }
          else {
-            showMessage({ type: 'danger', msg: 'Não foi possivel armazenar o tipo de produto.', reload: false });
+            showMessage({ type: 'danger', msg: msg, reload: false });
          }
       }).fail(function (response) {
          showMessage({ type: 'danger', msg: '<b>500</b> Ocorreu um erro no servidor.', reload: false });
@@ -103,13 +105,13 @@ async function deleteData(event, url, method, data) {
 
       if (typeof id != 'undefined') {
          let response = await request(url, method, { n_id: parseInt(id) })
-
+         let msg = response.msg || 'Nāo foi possivel retornar a mensagem.'
          if (response.status) {
             showMessage({ type: 'success', msg: 'Tipo de produto eliminado corretamente', reload: true });
          }
+         else {
+            showMessage({ type: 'success', msg: msg, reload: false });
+         }
       }
-
    }
-
-
 }
