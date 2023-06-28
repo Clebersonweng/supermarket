@@ -9,5 +9,5 @@
       </div>
       <?= view('layout._buttons') ?>
    </div>
-   <input type="text" class="" id="n_id" name="n_id" >
+   <input type="hidden" class="" id="n_id" name="n_id" >
 </form>
