@@ -1,48 +1,35 @@
+
 $(document).ready(function () {
 
+   $("#btnSave").on("click", function (event) {
+      console.log('click save');
+      let id = $("#n_id").val();
 
-   console.log("ready type products!");
+      if( id.trim() === '') {
+         submitForm('formTypeProducts', 'btnSave', 'http://localhost:8080/type-products/save', 'POST')
+      }
+      else {
+         submitForm('formTypeProducts', 'btnSave', 'http://localhost:8080/type-products/update', 'POST')
+      }
+   });
 
-   $("#c_descr").focus();
-   $("#btn_cancelar").on("click", function (event) {
+   $(".modificar").on("click", async function (event) {
+      setUpdate();
+      let response = await updateData(event,'http://localhost:8080/type-products/getById', 'formTypeProducts');
+      setData(response)
+   });
+
+   $(".eliminar").on("click", async function (event) {
+      console.log("delete!");
+      deleteData(event,'http://localhost:8080/type-products/delete','POST');
+   });
+
+   $("#btnCancel").on("click", function (event) {
       event.preventDefault();
-      clear();
       $("#c_descr").focus();
+      setUpdate(false);
    });
 
-   $('#formTypeProducts').submit(function (e) {
-      e.preventDefault();
-      $("#btn_guardar").prop("disabled", true);
 
-      $.ajax({
-         url: 'http://localhost:8080/type-products',
-         type: 'POST',
-         data: new FormData(this),
-         processData: false,
-         contentType: false
-      })
-         .always(function () {
-            $("#btn_guardar").prop("disabled", false);
-         }).done(function (response) {
-            if ( response.status ) {
-               $("#alert").addClass('alert-success').removeClass('d-none').append('Tipo de produto armazenado corretamente');
-               $('form')[0].reset();
-               setTimeout(() => {
-                  $(".alert").alert('close');
-                  location.reload();
-               }, 3000);
-            }
-            else {
-               $("#alert").addClass('alert-danger').removeClass('d-none').append('Não foi possivel armazenar o tipo de produto.');
-            }
 
-            
-         }).fail(function (response) {
-            $("#alert").addClass('alert-danger').removeClass('d-none').append('<b>500</b> Ocorreu um erro no servidor.');
-            setTimeout(() => {
-               $(".alert").alert('close');
-            }, 3000);
-         });
-
-   });
 });

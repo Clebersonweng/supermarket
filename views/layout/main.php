@@ -7,7 +7,7 @@
       <?php require "_navigation.php"; ?>
       <div class="wrapper">
          <div class="container-fluid">
-            <div class="alert d-none z-index-2 mt-3" role="alert" id="alert" style="position:absolute;z-index:50;width:98%"></div>
+            <?= view('layout._alert') ?>
             <?= $content ?>
          </div>
       </div>

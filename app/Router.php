@@ -29,7 +29,7 @@ class Router
    {
       $this->routes['POST'][$uri] = $controller;
    }
-   
+
    // public function put($uri, $controller)
    // {
    //    $this->routes['PUT'][$uri] = $controller;
@@ -37,14 +37,25 @@ class Router
 
    public function direct(string $uri, string $method)
    {
-      if (array_key_exists($uri, $this->routes[$method])) {
-         return $this->callAction(...explode('@', $this->routes[$method][$uri]));
-      }
+      // if contain the slash exist action in the controller
+      if ( strpos($uri, '/') !== false ) { // this method you need pass by slash the action example => http://localhost:8080/type-products/getById?id=24
+         $segments = explode('/', $uri);
+         $controller = explode('@', $this->routes[$method][$segments[0]])[0];
 
+         $action = $segments[1];
+         return $this->callAction($controller, $action);
+      }
+      else { // this block only accept one action by method
+         if (array_key_exists($uri, $this->routes[$method])) {
+            $action = $this->routes[$method][$uri];
+            return $this->callAction(...explode('@', $action));
+         }
+      }
       return 'views/404.php';
    }
 
    protected function callAction($controller, $action) {
+
       $controller =  "Supermarket\\Controllers\\{$controller}";
       $controller = new $controller;
 

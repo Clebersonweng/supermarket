@@ -70,7 +70,7 @@ class Database {
             {
                $dsn = "$this->engine:host=$this->host;dbname=$this->database";
             }
-            else 
+            else
             {
                $dsn = $this->engine . ':dbname=' . $this->database . ';host=' . $this->host . ';port=' . $this->port;
             }
@@ -110,6 +110,8 @@ class Database {
    }
 
    private function setParam($statement, $key, $value): void {
+      // var_dump($statement, $key, $value);
+      // die;
       $statement->bindParam($key, $value);
    }
 

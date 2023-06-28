@@ -9,7 +9,6 @@ setActiveMenu = () => {
 
    $("#nav-main .nav-item").removeClass('active');
 
-   console.log("path",path)
    switch (path) {
       case "/type-products": $("#typeProducts").closest('.nav-item').addClass('active'); break;
       case "/type-taxes": $("#typeTaxes").closest('.nav-item').addClass('active'); break;

@@ -3,47 +3,33 @@
    <div class="card-header">
       <?php require "views/layout/_submenu.php"; ?>
    </div>
-   <div class="card-body p-0">
+   <div class="card-body p-0 ">
       <div class="tab-content mt-2">
          <div id="list" class="tab-pane fade in active show">
-            <table class="table  table-striped">
+            <table class="table table-striped table-hover" id="listTypeProducts">
                <thead>
-                  <tr>
-                     <th scope="col">#</th>
-                     <th scope="col">Tipo de produto</th>
+                  <tr class="d-flex">
+                     <th class="col-1">#</th>
+                     <th class="col-10">Tipo de produto</th>
+                     <th class="col-1">Eventos</th>
                   </tr>
                </thead>
-               <tbody>
+               <tbody class="scroll">
                   <?php foreach ($data as $type) :?>
-                     <tr>
-                        <td><?php echo $type->n_id?></td>
-                        <td><?php echo $type->descr?></td>
+                     <tr class="d-flex" index="<?= $type->n_id?>">
+                        <td class="col-1 text-left"><?= $type->n_id?></td>
+                        <td class="col-10 text-left"><?= $type->descr?></td>
+                        <td class="col-1 text-center">
+                           <button type="button" class="btn btn-info btn-sm modificar" title="Modificar" data-id="<?= $type->n_id?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                           <button type="button" class="btn btn-danger btn-sm eliminar " title="Eliminar" data-id="<?= $type->n_id?>"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                        </td>
                      </tr>
                   <?php endforeach; ?>
                </tbody>
             </table>
          </div>
          <div id="new" class="tab-pane fade">
-            <form id="formTypeProducts" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
-               enctype="multipart/form-data">
-               <div class="col-md-12 m-2 text-center">
-                  <div class="form-group row">
-                     <label class="col-sm-1 col-form-label" for="exampleFormControlInput1">Tipo</label>
-                     <div class="col-md-6">
-                        <input type="text" class="form-control" id="descr" name="descr"
-                           placeholder="Higiene pessoal" required>
-                     </div>
-                  </div>
-                  
-                  <div class=" row">
-                     <div class="col-md-4 text-center">
-                        <button class="btn btn-danger mr-2" id="btnCancel">Cancelar</button>
-                        <button class="btn btn-primary" type="submit" id="btnSave"> Guardar</button>
-                     </div>
-                  </div>
-               </div>
-               <input type="text" class="d-none" id="n_id" name="n_id"  >
-            </form>
+            <?= view('type-product._form') ?>
          </div>
       </div>
    </div>

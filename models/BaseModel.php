@@ -10,8 +10,7 @@ use Supermarket\app\database\Config;
 
 abstract class BaseModel {
 
-    public function __construct()
-    {
+    public function __construct() {
     }
     /**
      * @var integer
@@ -30,23 +29,21 @@ abstract class BaseModel {
     protected $errors = [];
 
     public abstract static function tableName(): string;
+    //public abstract static function getById(string $tableName,int $id): array;
 
-    public function validate(): bool
-    {
+    public function validate(): bool {
         return true;
     }
     /**
      * Check if database engine is postgres or mysql for add the character ` for the table
      */
-    protected static function getEngine()
-    {
+    protected static function getEngine() {
         $config = Config::getConfig();
         $engine = $config['db']['engine'];
         return $engine;
     }
 
-    public function load(array $attributes)
-    {
+    public function load(array $attributes) {
 
         $safe_attributes = array_keys($this->getAttributes());
 
@@ -59,15 +56,14 @@ abstract class BaseModel {
         }
     }
 
-    public function save(): bool
-    {
+    public function save(): bool {
 
         if (!$this->validate()) {
             //Controller::setFlash('danger', $this->getErrors());
             return false;
         }
         $isNew = ($this->isNewRecord()) ? true : false;
-
+        // todo takes the variable create and pass null if is update , solution when is update remote the param create_at
         if ( $isNew ) {
             $this->created_at = date('Y/m/d H:i:s');
         }
@@ -76,11 +72,11 @@ abstract class BaseModel {
 
         $db = Database::getInstance();
 
-        $variables = $this->getAttributes();       
+        $variables = $this->getAttributes();
 
         if ( $isNew ) {
             $table = self::getEngine() === 'pgsql' ? '%s' : '`%s` ';
-            
+
             $variables = array_filter($variables, static function ($element) {
                 return $element !== "n_id";
             },ARRAY_FILTER_USE_KEY);
@@ -98,9 +94,9 @@ abstract class BaseModel {
             $this->n_id = $db->getDb()->lastInsertId();
         } else {
             // todo codigos repetindo ajustar posteriormente
-            $variables = array_filter($variables, static function ($element) {
-                return $element !== "n_id";
-            },ARRAY_FILTER_USE_KEY);
+            // $variables = array_filter($variables, static function ($element) {
+            //     return $element !== "n_id";
+            // },ARRAY_FILTER_USE_KEY);
 
             $columns = implode(', ', array_keys($variables));
 
@@ -113,19 +109,24 @@ abstract class BaseModel {
         return true;
     }
 
-    public function delete()
-    {
+    public function delete() {
+        $table = self::getEngine() === 'pgsql' ? '%s' : '`%s` ';
         $db = Database::getInstance();
-        $db->query(
-            sprintf('DELETE FROM `%s` WHERE n_id = :id', static::tableName()),
-            [
-                ':n_id' => $this->n_id
-            ]
-        );
+        try {
+            $result = $db->query(
+                sprintf("DELETE FROM {$table} WHERE n_id = :n_id", static::tableName()),
+                [
+                    ':n_id' => $this->n_id
+                ]
+            );
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
     }
 
     public function update($db, $variables, $columns) {
-        unset($variables['n_id']);
+        $table = self::getEngine() === 'pgsql' ? '%s' : '`%s` ';
 
         $columns = array_map(static function ($column) {
             return "$column = :$column";
@@ -143,7 +144,7 @@ abstract class BaseModel {
         );
 
         $result = $db->query(
-            sprintf('UPDATE `%s` SET %s WHERE n_id = :n_id', static::tableName(), implode(', ', $columns)),
+            sprintf("UPDATE {$table} SET %s WHERE n_id = :n_id", static::tableName(), implode(', ', $columns)),
             $params
         );
         return $result;
@@ -192,15 +193,14 @@ abstract class BaseModel {
         return $all ? [] : null;
     }
 
-    public static function query($rawQuery, $params = [])
-    {
+    public static function query($rawQuery, $params = []) {
         $db = Database::getInstance();
+
         $resultData = $db->select($rawQuery, $params);
         return $resultData;
     }
 
-    public static function list(): array
-    {
+    public static function list(): array {
         return self::get([], true);
     }
 
@@ -209,8 +209,7 @@ abstract class BaseModel {
      *
      * @return array
      */
-    public function getAttributes(): array
-    {
+    public function getAttributes(): array {
         $variables = [];
 
         $r = new ReflectionClass($this);
@@ -231,58 +230,38 @@ abstract class BaseModel {
      *
      * @return boolean
      */
-    public function isNewRecord(): bool
-    {
+    public function isNewRecord(): bool {
         return empty($this->n_id);
     }
 
-    public function set_updated_at($updated_at): void
-    {
+    public function set_updated_at($updated_at): void {
         $this->updated_at = $updated_at;
     }
 
     /**
      * @return integer|null
      */
-    public function get_updated_at()
-    {
+    public function get_updated_at() {
         return $this->updated_at;
     }
 
-    public function set_created_at($created_at): void
-    {
+    public function set_created_at($created_at): void {
         $this->created_at = $created_at;
     }
 
     /**
      * @return integer|null
      */
-    public function get_created_at()
-    {
+    public function get_created_at() {
         return $this->created_at;
     }
 
-    public function getErrors(): array
-    {
+    public function getErrors(): array {
         return $this->errors;
     }
 
-    public function setErrors(string $key, string $value): void
-    {
+    public function setErrors(string $key, string $value): void {
         $this->errors[$key] = $value;
     }
 
-    /**
-     * get the column name and convert in param for use in the database 
-     * Array
-        (
-            [0] => :n_id
-            [1] => :descr
-            [2] => :updated_at
-            [3] => :created_at
-        )
-     */
-    public function getParams(){
-
-    }
 }
